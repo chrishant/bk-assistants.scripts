@@ -15,6 +15,9 @@
         "BYWAYS INDIA PRIVATE LIMITED": [
             "BW", "BYW", "BY"
         ],
+         "AVERY DENNISON INDIA (PVT) LIMITED": [
+            "AD", "DENN", "DEN"
+        ],
 
         "TRIMCO GROUP (HONG KONG) COMPANY LIMITED": [
             "THK", "TRIMCO HK", "TRIMCO GROUP HK"
