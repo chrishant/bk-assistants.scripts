@@ -254,6 +254,51 @@
     );
 
     if (!allValid) return;
+// ===============================
+// 🔹 SELECT STORE
+// ===============================
+
+const storeDropdown = document.querySelector("#stores");
+if (!storeDropdown) {
+    showAlert("Store dropdown not found.", "error");
+    return;
+}
+
+storeDropdown.querySelector(".dropdown-toggle").click();
+await wait(500);
+
+const storeOptions = storeDropdown.querySelectorAll("ul li a");
+
+const storeMatch = [...storeOptions].find(opt =>
+    opt.innerText.trim().toLowerCase() === "acc. store c-122"
+);
+
+if (!storeMatch) {
+    showAlert("ACC. STORE C-122 not found.", "error");
+    return;
+}
+
+storeMatch.click();
+await wait(600);
+
+// ===============================
+// 🔹 CLICK APPLY
+// ===============================
+
+let applyBtn;
+for (let i = 0; i < 15; i++) {
+    applyBtn = document.querySelector("#apply");
+    if (applyBtn && !applyBtn.disabled) break;
+    await wait(200);
+}
+
+if (!applyBtn) {
+    showAlert("Apply button not found.", "error");
+    return;
+}
+
+applyBtn.click();
+await wait(1000);
 
     // ===============================
     // 8️⃣ ASK USER TO SAVE
