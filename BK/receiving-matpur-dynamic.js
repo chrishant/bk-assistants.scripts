@@ -249,13 +249,187 @@
 
     const allValid = qtyValid && receiveValid && billValid;
 
-    showAlert(
-        `Qty:${qtyValid ? "✔" : "✖"} | Rec:${receiveValid ? "✔" : "✖"} | Bill:${billValid ? "✔" : "✖"}`,
-        allValid ? "success" : "error",
-        7000
+showAlert(
+    `Qty:${qtyValid ? "✔" : "✖"} | Rec:${receiveValid ? "✔" : "✖"} | Bill:${billValid ? "✔" : "✖"}`,
+    allValid ? "success" : "error",
+    7000
+);
+async function runAddChargesScript(){
+
+    function wait(ms){
+        return new Promise(r => setTimeout(r, ms));
+    }
+
+    var addBtn = document.querySelector("#detail_collapsible_panel_open_popup_receive_other_charges_dt");
+
+    if (!addBtn) {
+        console.log("Add Other Charges button not found.");
+        return false;
+    }
+
+    addBtn.click();
+    console.log("Opening Additional Charges modal...");
+    await wait(800);
+
+    var typeDropdownList = document.querySelectorAll("#account_id");
+    var typeDropdown = typeDropdownList[typeDropdownList.length - 1];
+
+    if (!typeDropdown) {
+        console.log("Charge Type dropdown not found.");
+        return false;
+    }
+
+    var modal = typeDropdown.closest(".modal-content");
+
+    const chargeAliasMap = {
+        "bc": "BANK CHARGES",
+        "fc": "FREIGHT AND CARTAGE",
+        "disc": "DISCOUNT"
+    };
+
+    var userInput = prompt("Enter Charge Type Alias (bc, fcn, discn etc):");
+    if (!userInput) return false;
+
+    var cleaned = userInput.trim().toLowerCase();
+    var isNotTaxable = cleaned.endsWith("n");
+
+    if (isNotTaxable) {
+        cleaned = cleaned.slice(0, -1);
+    }
+
+    var chargeType = chargeAliasMap[cleaned] || cleaned.toUpperCase();
+
+    var amount = prompt("Enter Charge Amount:");
+    if (!amount) return false;
+
+    typeDropdown.querySelector(".dropdown-toggle").click();
+    await wait(400);
+
+    var searchInput = typeDropdown.querySelector("input[type='text']");
+    if (searchInput) {
+        var searchScope = angular.element(searchInput).scope();
+        searchScope.$apply(function(){
+            searchScope.searchTerm = chargeType;
+        });
+    }
+
+    await wait(800);
+
+    var options = typeDropdown.querySelectorAll("ul li a");
+
+    var target = [...options].find(opt =>
+        opt.innerText.trim().toLowerCase() === chargeType.toLowerCase()
     );
 
-    if (!allValid) return;
+    if (!target) {
+        console.log("Charge type not found in dropdown.");
+        return false;
+    }
+
+    target.click();
+    await wait(400);
+
+    var amountInputs = modal.querySelectorAll("#charge_value");
+    var amountInput = amountInputs[amountInputs.length - 1];
+    var scope = angular.element(amountInput).scope();
+
+    scope.$apply(function(){
+        scope.popup_model.charge_value = amount;
+    });
+
+    await wait(400);
+
+    if (isNotTaxable) {
+
+        var taxDropdownList = modal.querySelectorAll("#is_tax");
+        var taxDropdown = taxDropdownList[taxDropdownList.length - 1];
+
+        taxDropdown.querySelector(".dropdown-toggle").click();
+        await wait(400);
+
+        var taxOptions = taxDropdown.querySelectorAll("ul li a");
+
+        var noOption = [...taxOptions].find(opt =>
+            opt.innerText.trim().toLowerCase() === "no"
+        );
+
+        if (noOption) noOption.click();
+
+        await wait(400);
+    }
+
+    var buttons = modal.querySelectorAll("button");
+
+    var okCloseBtn = [...buttons].find(btn =>
+        btn.innerText.trim().toLowerCase() === "ok & close"
+    );
+
+    if (!okCloseBtn) {
+        console.log("Ok & Close button not found.");
+        return false;
+    }
+
+    okCloseBtn.click();
+
+    console.log("Additional Charge added successfully.");
+    return true;
+}
+
+if (!allValid) {
+
+    await wait(1000);
+
+    const decision = prompt(
+        "Values are not matching.\nWould You Want to Add Charges?\nType YES to continue:"
+    );
+
+    if (!decision || decision.trim().toLowerCase() !== "yes") {
+        showAlert("Process stopped due to mismatch.", "error", 5000);
+        return;
+    }
+
+    showAlert("Opening Add Charges...", "success", 4000);
+
+    const added = await runAddChargesScript();
+
+    if (!added) {
+        showAlert("Charges were not added.", "error", 5000);
+        return;
+    }
+
+    // ✅ WAIT FOR SYSTEM TO RECALCULATE
+    await wait(1500);
+
+    // 🔁 RE-VALIDATE AGAIN
+    const newReceiveAmount = parseFloat(
+        document.querySelector("#receive_amount").value.replace(/,/g, "")
+    );
+
+    const newBillAmount = parseFloat(
+        document.querySelector("#bill_amount").value.replace(/,/g, "")
+    );
+
+    const newReceiveValid = isWithinFloorCeil(newReceiveAmount);
+    const newBillValid = isWithinFloorCeil(newBillAmount);
+
+    const newAllValid = newReceiveValid && newBillValid;
+
+    showAlert(
+        `After Charges → Rec:${newReceiveValid ? "✔" : "✖"} | Bill:${newBillValid ? "✔" : "✖"}`,
+        newAllValid ? "success" : "error",
+        6000
+    );
+
+    if (!newAllValid) {
+        showAlert("Still not matching. Stopping process.", "error", 6000);
+        return;
+    }
+
+    // ✅ If valid now → DO NOT RETURN
+    showAlert("Amounts matched. Continuing...", "success", 4000);
+}
+
+
 // ===============================
 // 🔹 SELECT STORE
 // ===============================
