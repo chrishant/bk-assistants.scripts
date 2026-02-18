@@ -1,5 +1,7 @@
 (async function(){
-
+ if (!location.href.includes("#/procurement/receiving")) {
+        throw new Error("❌ Not on Receiving screen");
+    }
     function wait(ms){
         return new Promise(r => setTimeout(r, ms));
     }
