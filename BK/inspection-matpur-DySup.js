@@ -317,16 +317,41 @@ console.log("🎉 OK clicked successfully.");
 // 9️⃣ QUANTITY VALIDATION + SAVE
 // ===============================
 
+console.log("⏳ Waiting for modal to close...");
+
+for (let i = 0; i < 200; i++) {
+
+    const stillOpen = document.querySelectorAll(".modal")[2];
+
+    if (!stillOpen || !stillOpen.querySelector("#recv_id")) {
+        break;
+    }
+
+    await wait(50);
+}
+
+await wait(400); // small safety buffer
+
+
+// ===============================
+// 9️⃣ WAIT FOR FOOTER TOTALS
+// ===============================
+
 console.log("⏳ Waiting for footer totals...");
 
 let footerCells;
-for (let i = 0; i < 200; i++) {
+
+for (let i = 0; i < 300; i++) {
 
     footerCells = document.querySelectorAll(".settotalfooter");
 
-    if (footerCells.length >= 2) break;
+    if (footerCells.length >= 2 &&
+        footerCells[0].innerText.trim() !== "" &&
+        footerCells[1].innerText.trim() !== "") {
+        break;
+    }
 
-    await wait(50);
+    await wait(60);
 }
 
 if (!footerCells || footerCells.length < 2) {
@@ -334,7 +359,11 @@ if (!footerCells || footerCells.length < 2) {
     return;
 }
 
-// Extract numeric value safely
+
+// ===============================
+// EXTRACT QUANTITIES
+// ===============================
+
 function extractQty(el){
     const match = el.innerText.match(/([\d.]+)/);
     return match ? parseFloat(match[1]) : 0;
@@ -346,7 +375,11 @@ const footerQty2 = extractQty(footerCells[1]);
 console.log("Footer Qty 1:", footerQty1);
 console.log("Footer Qty 2:", footerQty2);
 
-// Ask user for expected quantity
+
+// ===============================
+// USER VALIDATION
+// ===============================
+
 const userQtyInput = prompt("Enter Expected Total Quantity:");
 if (!userQtyInput) return;
 
@@ -356,10 +389,6 @@ if (isNaN(userQty)){
     alert("❌ Invalid quantity entered.");
     return;
 }
-
-// ===============================
-// VALIDATION
-// ===============================
 
 if (userQty !== footerQty1){
     alert("❌ User quantity does NOT match first footer total.");
@@ -373,6 +402,7 @@ if (footerQty1 !== footerQty2){
 
 console.log("✅ Quantity validation passed.");
 
+
 // ===============================
 // CLICK SAVE
 // ===============================
@@ -384,7 +414,6 @@ if (!saveBtn){
     return;
 }
 
-// Wait until enabled
 for (let i = 0; i < 100; i++){
     if (!saveBtn.disabled) break;
     await wait(50);
@@ -395,10 +424,8 @@ if (saveBtn.disabled){
     return;
 }
 
-// Angular-safe click
 angular.element(saveBtn).triggerHandler("click");
 
 console.log("💾 Save clicked successfully.");
-
 
 })();
