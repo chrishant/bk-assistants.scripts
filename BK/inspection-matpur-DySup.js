@@ -56,13 +56,13 @@
 
     const supplierDropdown = document.querySelector("#party_id");
     supplierDropdown.querySelector(".dropdown-toggle").click();
-    await wait(400);
+    await wait(100);
 
     const supplierSearch = document.querySelector("#txtCustomSelectSearchText input");
     const supplierScope = angular.element(supplierSearch).scope();
 
     supplierScope.$apply(()=> supplierScope.searchTerm = supplierInput);
-    await wait(800);
+    await wait(100);
 
     const supplierMatch = [...document.querySelectorAll("li.vs-repeat-repeated-element a")]
         .find(opt => opt.innerText.toLowerCase().includes(supplierInput.toLowerCase()));
@@ -73,7 +73,7 @@
     }
 
     supplierMatch.click();
-    await wait(500);
+    await wait(100);
 
     console.log("✅ Supplier selected");
 
@@ -83,7 +83,7 @@
 
     const inspDropdown = document.querySelector("#insp_type");
     inspDropdown.querySelector(".dropdown-toggle").click();
-    await wait(300);
+    await wait(50);
 
     const inspMatch = [...inspDropdown.querySelectorAll("li.vs-repeat-repeated-element a")]
         .find(opt => opt.innerText.trim().toLowerCase() === "material purchase");
@@ -94,7 +94,7 @@
     }
 
     inspMatch.click();
-    await wait(400);
+    await wait(50);
 
     console.log("✅ Inspection Type selected");
 
@@ -172,7 +172,7 @@ for (let i = 0; i < 150; i++) {
         break;
     }
 
-    await wait(60);
+    await wait(50);
 }
 
 if (!options || !options.length)
@@ -220,7 +220,7 @@ for (let i = 0; i < 300; i++) {   // ~18 seconds max
         rowsLoaded = true;
         break;
     }
-    await wait(60);
+    await wait(50);
 }
 
 if (!rowsLoaded) {
@@ -351,7 +351,7 @@ for (let i = 0; i < 300; i++) {
         break;
     }
 
-    await wait(60);
+    await wait(50);
 }
 
 if (!footerCells || footerCells.length < 2) {
