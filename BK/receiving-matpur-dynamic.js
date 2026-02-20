@@ -97,7 +97,7 @@
         filterScope.colFilter.term = supplier;
     });
 
-    await wait(1000);
+    await wait(600);
 
     const rows = supplierModal.querySelectorAll(".ui-grid-row");
     if (!rows.length) return;
@@ -106,7 +106,7 @@
       .querySelector(".ui-grid-selection-row-header-buttons")
       .click();
 
-    await wait(800);
+    await wait(150);
 
     // ===============================
     // 2️⃣ RECEIVE TYPE
@@ -114,7 +114,7 @@
 
     const recvDropdown = document.querySelector("#recv_type");
     recvDropdown.querySelector(".dropdown-toggle").click();
-    await wait(400);
+    await wait(100);
 
     const recvOptions = recvDropdown.querySelectorAll("ul li a");
 
@@ -143,13 +143,13 @@
 
     const gateDropdown = document.querySelector("#gate_entry_id");
     gateDropdown.querySelector(".dropdown-toggle").click();
-    await wait(700);
+    await wait(100);
 
     let searchInput;
     for (let i = 0; i < 15; i++) {
         searchInput = gateDropdown.querySelector(".custom-select-search input");
         if (searchInput) break;
-        await wait(200);
+        await wait(500);
     }
 
     if (!searchInput) return;
@@ -159,7 +159,7 @@
         gateScope.searchTerm = gateValue;
     });
 
-    await wait(1200);
+    await wait(500);
 
     const gateOptions = gateDropdown.querySelectorAll("ul li a");
 
@@ -174,7 +174,7 @@
     if (!match) return;
 
     match.click();
-    await wait(1200);
+    await wait(800);
 
     // ===============================
     // 5️⃣ SELECT ALL GRID
@@ -191,7 +191,7 @@
         });
     }
 
-    await wait(800);
+    await wait(500);
 
     // ===============================
     // 6️⃣ CLICK OK & CLOSE
@@ -201,13 +201,13 @@
     for (let i = 0; i < 20; i++) {
         okBtn = document.querySelector("#sub_screen_ok");
         if (okBtn && !okBtn.disabled) break;
-        await wait(200);
+        await wait(100);
     }
 
     if (!okBtn) return;
 
     okBtn.click();
-    await wait(2000);
+    await wait(800);
 
     // ===============================
     // 7️⃣ VALIDATION
@@ -269,7 +269,7 @@ async function runAddChargesScript(){
 
     addBtn.click();
     console.log("Opening Additional Charges modal...");
-    await wait(800);
+    await wait(400);
 
     var typeDropdownList = document.querySelectorAll("#account_id");
     var typeDropdown = typeDropdownList[typeDropdownList.length - 1];
@@ -303,7 +303,7 @@ async function runAddChargesScript(){
     if (!amount) return false;
 
     typeDropdown.querySelector(".dropdown-toggle").click();
-    await wait(400);
+    await wait(200);
 
     var searchInput = typeDropdown.querySelector("input[type='text']");
     if (searchInput) {
@@ -313,7 +313,7 @@ async function runAddChargesScript(){
         });
     }
 
-    await wait(800);
+    await wait(500);
 
     var options = typeDropdown.querySelectorAll("ul li a");
 
@@ -327,7 +327,7 @@ async function runAddChargesScript(){
     }
 
     target.click();
-    await wait(400);
+    await wait(200);
 
     var amountInputs = modal.querySelectorAll("#charge_value");
     var amountInput = amountInputs[amountInputs.length - 1];
@@ -337,7 +337,7 @@ async function runAddChargesScript(){
         scope.popup_model.charge_value = amount;
     });
 
-    await wait(400);
+    await wait(200);
 
     if (isNotTaxable) {
 
@@ -345,7 +345,7 @@ async function runAddChargesScript(){
         var taxDropdown = taxDropdownList[taxDropdownList.length - 1];
 
         taxDropdown.querySelector(".dropdown-toggle").click();
-        await wait(400);
+        await wait(200);
 
         var taxOptions = taxDropdown.querySelectorAll("ul li a");
 
@@ -355,7 +355,7 @@ async function runAddChargesScript(){
 
         if (noOption) noOption.click();
 
-        await wait(400);
+        await wait(200);
     }
 
     var buttons = modal.querySelectorAll("button");
@@ -377,7 +377,7 @@ async function runAddChargesScript(){
 
 if (!allValid) {
 
-    await wait(1000);
+    await wait(800);
 
     const decision = prompt(
         "Values are not matching.\nWould You Want to Add Charges?\nType YES to continue:"
@@ -398,7 +398,7 @@ if (!allValid) {
     }
 
     // ✅ WAIT FOR SYSTEM TO RECALCULATE
-    await wait(1500);
+    await wait(1200);
 
     // 🔁 RE-VALIDATE AGAIN
     const newReceiveAmount = parseFloat(
@@ -441,7 +441,7 @@ if (!storeDropdown) {
 }
 
 storeDropdown.querySelector(".dropdown-toggle").click();
-await wait(500);
+await wait(200);
 
 const storeOptions = storeDropdown.querySelectorAll("ul li a");
 
@@ -455,7 +455,7 @@ if (!storeMatch) {
 }
 
 storeMatch.click();
-await wait(600);
+await wait(100);
 
 // ===============================
 // 🔹 CLICK APPLY
@@ -465,7 +465,7 @@ let applyBtn;
 for (let i = 0; i < 15; i++) {
     applyBtn = document.querySelector("#apply");
     if (applyBtn && !applyBtn.disabled) break;
-    await wait(200);
+    await wait(100);
 }
 
 if (!applyBtn) {
@@ -474,7 +474,7 @@ if (!applyBtn) {
 }
 
 applyBtn.click();
-await wait(1000);
+await wait(800);
 
     // ===============================
     // 8️⃣ ASK USER TO SAVE
@@ -494,7 +494,7 @@ await wait(1000);
     for (let i = 0; i < 20; i++) {
         saveBtn = document.querySelector("#Save");
         if (saveBtn && !saveBtn.disabled) break;
-        await wait(200);
+        await wait(100);
     }
 
     if (!saveBtn) return;
@@ -509,7 +509,7 @@ await wait(1000);
     for (let i = 0; i < 20; i++) {
         confirmBtn = document.querySelector("#confirm_ok");
         if (confirmBtn && confirmBtn.offsetParent !== null) break;
-        await wait(200);
+        await wait(100);
     }
 
     if (!confirmBtn) return;
