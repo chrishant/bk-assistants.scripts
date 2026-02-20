@@ -71,7 +71,7 @@
         while (!conditionFn()) {
             if (Date.now() - start > timeout)
                 throw new Error("❌ Timeout waiting");
-            await wait(100);
+            await wait(60);
         }
     }
 
@@ -82,7 +82,7 @@
 
         const toggle = container.querySelector(".dropdown-toggle");
         toggle.click();
-        await wait(200);
+        await wait(50);
 
         const searchInput =
             container.querySelector("#txtCustomSelectSearchText input");
@@ -111,7 +111,7 @@
     ====================================================== */
 
     await selectCustomDropdown("party_id", supplierResolved);
-    await wait(2000);
+    await wait(400);
 
     await selectCustomDropdown("ship_address_id", "C-122");
     await selectCustomDropdown("indent_type", "Production Order");
@@ -122,7 +122,7 @@
         document.querySelector("#detail_collapsible_panel_open_popup_po_dt");
 
     addButton.scrollIntoView({ block: "center" });
-    await wait(300);
+    await wait(100);
     addButton.click();
 
     /* =====================================================
@@ -170,7 +170,7 @@
     const btn = allButtons[5];
 
     btn.click();
-    await wait(300);
+    await wait(100);
 
     const container = btn.closest("#manu_buyer_filter");
 
@@ -203,7 +203,7 @@
         console.warn("⚠ No match for:", currentItemGroup);
     }
 
-    await wait(150);
+    await wait(100);
     btn.click();
 
 })();
